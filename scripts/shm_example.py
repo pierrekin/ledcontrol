@@ -1,3 +1,4 @@
+import time
 from ledcontrol import ahrs, tpm2
 from ledcontrol.math import clamp, scale
 
@@ -31,10 +32,7 @@ def main():
     tpm2_interface = tpm2.SerialTPM2(brightness=BRIGHTNESS)
     imu_interface = ahrs.SerialAHRS()
 
-    position_osc = Osc(spring=10, timedelta=0.035, strength=10, drag=0.02)
-    hue_osc = Osc(spring=10, timedelta=0.05, strength=5)
-    saturation_osc = Osc(spring=10, timedelta=0.05, strength=5)
-    value_osc = Osc(spring=10, timedelta=0.05, strength=5)
+    position_osc = Osc(spring=10, timedelta=0.035, strength=5, drag=0.02)
 
     while True:
         attitude, imu, timing = imu_interface.sample()
@@ -43,22 +41,14 @@ def main():
         clamped_accel = [clamp(x) for x in scaled_accel]
 
         position_osc.tick(clamped_accel[0])
-        hue_osc.tick(clamped_accel[1])
-        saturation_osc.tick(clamped_accel[1])
-        value_osc.tick(clamped_accel[2])
 
         position = int(position_osc.interpolate(0, LED_COUNT) - LED_COUNT / 2)
 
-        bottom_leds = [
-            (
-                0.4,
-                1.0,
-                1.0,
-            )
-            for i in range(position)
-        ]
+        bottom_leds = [(0.4, 1.0, 1.0) for i in range(position)]
         top_leds = [(0.8, 1.0, 1.0) for i in range(LED_COUNT - position)]
         tpm2_interface.flush_hsv(bottom_leds + top_leds)
+
+        time.sleep(0.02)
 
 
 if __name__ == "__main__":
