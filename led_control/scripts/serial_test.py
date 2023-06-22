@@ -4,7 +4,7 @@ from cobs import cobs
 from datetime import datetime
 
 AHRS_DEVICE = "/dev/tty.usbserial-0001"
-AHRS_BAUDRATE = 921600
+AHRS_BAUDRATE = 115200
 
 DELIMETER_BYTE = b"\x00"
 

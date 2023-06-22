@@ -8,7 +8,7 @@ import collections
 from datetime import datetime
 
 
-SERIAL_DEVICE = "/dev/tty.usbserial-0001"
+SERIAL_DEVICE = "/dev/cu.usbserial-0001"
 SERIAL_BAUDRATE = 115200
 LED_COUNT = 120
 BRIGHTNESS = 1.0
@@ -18,10 +18,15 @@ MIDDLE_LEDS_COUNT = 3
 def flush_leds(leds, wled_interface, brightness=1):
     rgb_data = [colorsys.hsv_to_rgb(h, s, v) for (h, s, v) in leds]
     rgb_data_int = [
-        (int(r * 255 * brightness), int(g * 255 * brightness), int(b * 255 * brightness)) for (r, g, b) in rgb_data
+        (
+            int(r * 255 * brightness),
+            int(g * 255 * brightness),
+            int(b * 255 * brightness),
+        )
+        for (r, g, b) in rgb_data
     ]
     data = {"seg": {"i": rgb_data_int}}
-    message = (json.dumps(data) + '\n').encode('ascii')
+    message = (json.dumps(data) + "\n").encode("ascii")
     wled_interface.write(message)
 
 
