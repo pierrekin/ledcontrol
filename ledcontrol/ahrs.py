@@ -2,9 +2,10 @@ import struct
 from collections import namedtuple
 import serial
 from cobs import cobs
-from led_control import timing
+from ledcontrol import timing
 
 
+DEFAULT_DEVICE = "/dev/cu.usbserial-0001"
 DEFAULT_BAUDRATE = 921600
 
 FLOAT_SIZE = 4
@@ -27,7 +28,7 @@ def chunker(seq, size):
 
 
 class SerialAHRS:
-    def __init__(self, device=None, baudrate=DEFAULT_BAUDRATE):
+    def __init__(self, device=DEFAULT_DEVICE, baudrate=DEFAULT_BAUDRATE):
         self.interface = serial.Serial(device, baudrate=baudrate)
         self.counter = timing.FrequencyCounter()
 
@@ -50,7 +51,7 @@ class SerialAHRS:
         unpack_float = lambda data: struct.unpack("f", data)[0]
         return [unpack_float(data) for data in chunker(packet, FLOAT_SIZE)]
 
-    def read(self):
+    def sample(self):
         self.counter.tick()
         packet = self._read_packet()
         return (

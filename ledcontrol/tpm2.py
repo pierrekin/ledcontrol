@@ -1,19 +1,18 @@
 import serial
 import colorsys
-from led_control import timing
+from ledcontrol import timing
 from cobs import cobs
 
-DEFAULT_BAUDRATE = 500000
+DEFAULT_SERIAL_DEVICE = "/dev/cu.usbmodem7111101"  # Teensy
+DEFAULT_FREQUENCY = 280  # Hz
 
-CONVERSION = 2**8 - 1
+DEFAULT_BAUDRATE = 105200  # Baud
+
+CONVERSION_FACTOR = 255  # Maxmimum colour channel value per TPM2
 
 PACKET_START = b"\xC9"
 PACKET_TYPE_DATA_FRAME = b"\xDA"
 PACKET_END = b"\x36"
-
-WLED_VERSION_STRING = b"WLED 2212222\r\n"
-
-DEFAULT_FREQUENCY = 280
 
 
 def build_packet(leds):
@@ -22,22 +21,16 @@ def build_packet(leds):
     return PACKET_START + PACKET_TYPE_DATA_FRAME + size_bytes + data + PACKET_END
 
 
-class SerialWLED:
+class SerialTPM2:
     def __init__(
         self,
-        device=None,
+        device=DEFAULT_SERIAL_DEVICE,
         baudrate=DEFAULT_BAUDRATE,
         frequency=DEFAULT_FREQUENCY,
         truncate=None,
         brightness=1,
     ):
-        self.interface = serial.Serial(
-            device,
-            baudrate=baudrate,
-        )
-
-        self.interface.write("v".encode("ascii"))
-        # assert self.interface.readline() == WLED_VERSION_STRING
+        self.interface = serial.Serial(device, baudrate=baudrate)
 
         self.counter = timing.FrequencyCounter()
         self.ratelimiter = (
@@ -57,9 +50,9 @@ class SerialWLED:
         )
         rgb_leds_int = [
             (
-                int(r * CONVERSION * brightness),
-                int(g * CONVERSION * brightness),
-                int(b * CONVERSION * brightness),
+                int(r * CONVERSION_FACTOR * brightness),
+                int(g * CONVERSION_FACTOR * brightness),
+                int(b * CONVERSION_FACTOR * brightness),
             )
             for (r, g, b) in truncated_leds
         ]
@@ -81,7 +74,7 @@ class SerialWLED:
         self.flush_rgb(rgb_leds, brightness)
 
 
-class COBSSerialWLED(SerialWLED):
+class COBSSerialWLED(SerialTPM2):
     def flush_packet(self, packet):
         stuffed_packet = cobs.encode(packet)
         self.interface.write(stuffed_packet)

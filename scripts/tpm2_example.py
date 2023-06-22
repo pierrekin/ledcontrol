@@ -1,15 +1,14 @@
 import random
 import time
-from led_control.wled import SerialWLED
+from ledcontrol.tpm2 import SerialTPM2
 
 
-SERIAL_DEVICE = "/dev/cu.usbmodem7111101"
 NUM_LEDS = 120
 NUM_COLOURS = 5
 
 
 def main():
-    wled = SerialWLED(SERIAL_DEVICE, brightness=0.1)
+    wled = SerialTPM2(brightness=0.1)
 
     index = 0
     direction = 1
@@ -27,15 +26,13 @@ def main():
 
         index += direction
 
-        # colour_index += random.choice([1, 2, 3, 4, 5])
-
         leds[index] = colours[int(colour_index % len(colours))]
-        # leds[index] = random.choice(colours)
 
         wled.flush_hsv(leds, block=True)
 
         if wled.counter.ready():
-            print(wled.counter.sample())
+            frequency = wled.counter.sample()
+            print(f"{frequency} Hz")
 
 
 if __name__ == "__main__":
