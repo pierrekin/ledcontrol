@@ -1,0 +1,2 @@
+default_port: usb:14100000
+default_fqbn: teensy:avr:teensy31
