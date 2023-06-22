@@ -3,7 +3,7 @@ def scale(x, input_min, input_max, output_min=0, output_max=1):
     b = (x - input_min) / (input_max - input_min)
     c = output_max - output_min
 
-    return output_min + b * c
+    return a + b * c
 
 
 def clamp(x, lower=0, upper=1):

@@ -14,6 +14,13 @@ In order to run a script you can do the following:
 python -m scripts.simple_example
 ```
 
+To lint:
+```
+black scripts ledcontrol
+isort scripts ledcontrol
+flake8 scripts ledcontrol
+```
+
 ## Arduino Sketches
 The arduino sketches are compiled and uploaded using the arduino cli.
 

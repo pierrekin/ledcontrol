@@ -1,6 +1,3 @@
-import random
-import time
-
 from ledcontrol.tpm2 import SerialTPM2
 
 NUM_LEDS = 120
