@@ -1,9 +1,10 @@
 import struct
 from collections import namedtuple
+
 import serial
 from cobs import cobs
-from ledcontrol import timing
 
+from ledcontrol import timing
 
 DEFAULT_DEVICE = "/dev/cu.usbserial-0001"
 DEFAULT_BAUDRATE = 921600

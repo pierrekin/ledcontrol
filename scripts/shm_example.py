@@ -1,6 +1,5 @@
 from ledcontrol import ahrs, tpm2
-from ledcontrol.math import scale, clamp
-
+from ledcontrol.math import clamp, scale
 
 LED_COUNT = 120
 BRIGHTNESS = 0.01

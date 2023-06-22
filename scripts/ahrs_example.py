@@ -1,7 +1,6 @@
 from ledcontrol import ahrs, wled
 from ledcontrol.math import scale
 
-
 WLED_DEVICE = "/dev/cu.usbmodem7111101"
 AHRS_DEVICE = "/dev/cu.usbserial-0001"
 

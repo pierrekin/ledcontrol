@@ -1,7 +1,9 @@
-import serial
 import colorsys
-from ledcontrol import timing
+
+import serial
 from cobs import cobs
+
+from ledcontrol import timing
 
 DEFAULT_SERIAL_DEVICE = "/dev/cu.usbmodem7111101"  # Teensy
 DEFAULT_FREQUENCY = 280  # Hz

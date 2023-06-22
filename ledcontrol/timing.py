@@ -1,7 +1,6 @@
 import time
 from datetime import datetime, timedelta
 
-
 DEFAULT_PERIOD = timedelta(seconds=1)
 
 
