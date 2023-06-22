@@ -15,7 +15,6 @@ def main():
 
     while True:
         attitude_sample, imu_sample, timing_sample = ahrs_interface.read()
-
         scaled_roll = scale(attitude_sample.roll, -90, 90, 0, LED_COUNT * SENSITIVITY)
 
         # Rainbow mode
